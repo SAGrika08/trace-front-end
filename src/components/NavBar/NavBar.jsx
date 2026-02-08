@@ -15,9 +15,10 @@ const handleSignOut = () => {
     <nav>
       {user ? (
         <ul>
-           <li><Link to='/'>Dashboard</Link></li>
-              <li><Link to='/applications'>Applications</Link></li>
-            <li><Link to='/' onClick={handleSignOut}>Sign Out</Link></li>
+          <li><Link to='/'>Dashboard</Link></li>
+          <li><Link to='/applications'>Applications</Link></li>
+          <li><Link to='/follow-ups'>Follow Ups</Link></li>
+          <li><Link to='/' onClick={handleSignOut}>Sign Out</Link></li>
         </ul>
       ) : (
         <ul>
