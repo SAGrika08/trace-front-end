@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { useState, useEffect } from 'react';
 import * as appService from '../../services/appService';
-import * as appFollowUp from '../../services/appFollowup';
+import * as appFollowUp from '../../services/appFollowUp.js';
 import * as checkInService from '../../services/checkInService';
 
 

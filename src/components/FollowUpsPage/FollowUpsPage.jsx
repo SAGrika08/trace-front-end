@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import * as appService from "../../services/appService";
-import * as followUpService from "../../services/appFollowUp";
+import * as followUpService from "../../services/appFollowUp.js";
+import { UserContext } from "../../contexts/UserContext";
 
 const FollowUpsPage = (props) => {
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
   const [applications, setApplications] = useState([]);
   const [allFollowUps, setAllFollowUps] = useState([]);
+  const [editingFollowUp, setEditingFollowUp] = useState(null);
 
   const [formData, setFormData] = useState({
     selectedAppId: "",
@@ -57,11 +60,18 @@ const FollowUpsPage = (props) => {
       isDone: formData.isDone,
     };
 
-    props.handleAddFollowUp({ ...payload, selectedAppId: formData.selectedAppId });
-    setFormData({ selectedAppId: "", dueDate: "", note: "", isDone: false });
-    
-    // Refresh the follow-ups list after a short delay to allow backend to process
-    setTimeout(handleFollowUpCreated, 500);
+    if (editingFollowUp) {
+      (async () => {
+        await props.handleUpdateFollowUp(formData.selectedAppId, editingFollowUp._id, payload);
+        setEditingFollowUp(null);
+        setFormData({ selectedAppId: "", dueDate: "", note: "", isDone: false });
+        setTimeout(handleFollowUpCreated, 300);
+      })();
+    } else {
+      props.handleAddFollowUp({ ...payload, selectedAppId: formData.selectedAppId });
+      setFormData({ selectedAppId: "", dueDate: "", note: "", isDone: false });
+      setTimeout(handleFollowUpCreated, 500);
+    }
   };
 
   const handleFollowUpCreated = async () => {
@@ -70,9 +80,32 @@ const FollowUpsPage = (props) => {
     await fetchFollowUps(apps);
   };
 
+  const handleDelete = async (appId, followUpId) => {
+    const deletedFollowUp = await props.handleDeleteFollowUp(appId, followUpId);
+    // Only refresh if deletion was successful
+    if (deletedFollowUp) {
+      setTimeout(handleFollowUpCreated, 300);
+    }
+  };
+
+  const handleEdit = (followUp) => {
+    setEditingFollowUp(followUp);
+    setFormData({
+      selectedAppId: followUp.appId,
+      dueDate: followUp.dueDate ? followUp.dueDate.split('T')[0] : "",
+      note: followUp.note || "",
+      isDone: followUp.isDone || false,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingFollowUp(null);
+    setFormData({ selectedAppId: "", dueDate: "", note: "", isDone: false });
+  };
+
   return (
     <main>
-      <h1>Add Follow-Up</h1>
+      <h1>{editingFollowUp ? 'Edit Follow-Up' : 'Add Follow-Up'}</h1>
 
       <form onSubmit={handleSubmit}>
         <label htmlFor="selectedAppId-input">Application</label>
@@ -120,7 +153,10 @@ const FollowUpsPage = (props) => {
           Mark as Done
         </label>
 
-        <button type="submit">SUBMIT</button>
+        <button type="submit">{editingFollowUp ? 'UPDATE' : 'SUBMIT'}</button>
+        {editingFollowUp && (
+          <button type="button" onClick={handleCancelEdit}>CANCEL</button>
+        )}
       </form>
 
       <hr />
@@ -136,6 +172,7 @@ const FollowUpsPage = (props) => {
               <th style={{ padding: "10px", textAlign: "left" }}>Due Date</th>
               <th style={{ padding: "10px", textAlign: "left" }}>Note</th>
               <th style={{ padding: "10px", textAlign: "left" }}>Status</th>
+              <th style={{ padding: "10px", textAlign: "left" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -148,6 +185,14 @@ const FollowUpsPage = (props) => {
                 <td style={{ padding: "10px" }}>{followUp.note}</td>
                 <td style={{ padding: "10px" }}>
                   {followUp.isDone ? <strong>✓ Done</strong> : "Pending"}
+                </td>
+                <td style={{ padding: "10px" }}>
+                  <button onClick={() => handleEdit(followUp)}>
+                    Edit
+                  </button>
+                  <button onClick={() => handleDelete(followUp.appId, followUp._id)}>
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
