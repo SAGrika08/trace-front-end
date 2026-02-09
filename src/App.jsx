@@ -9,8 +9,10 @@ import Landing from './components/Landing/Landing';
 import Dashboard from './components/Dashboard/Dashboard';
 import AppList from './components/AppList/AppList.jsx';
 import * as appService from './services/appService.js';
+import * as followUpService from './services/appFollowUp';
 import AppDetails from './components/AppDetails/AppDetails.jsx';
 import AppForm from "./components/AppForm/AppForm";
+import FollowUpsPage from './components/FollowUpsPage/FollowUpsPage.jsx';
 
 import { UserContext } from './contexts/UserContext';
 
@@ -24,6 +26,14 @@ const handleAddApp = async (appFormData) => {
   const newApp = await appService.create(appFormData);
   setApplications([newApp, ...applications]);
   navigate("/applications");
+};
+
+const handleAddFollowUp = async (followUpFormData) => {
+  const { selectedAppId, ...followUpData } = followUpFormData;
+  const result = await followUpService.create(selectedAppId, followUpData);
+  if (result && !result.err) {
+    // Stay on page and let component refresh the list
+  }
 };
   useEffect(() => {
   const fetchAllApplications = async () => {
@@ -45,6 +55,7 @@ const handleAddApp = async (appFormData) => {
           <Route path='/applications' element={<AppList applications={applications} />} />
           <Route path='/applications/:appId' element={<AppDetails/>} />
           <Route path="/applications/new" element={<AppForm handleAddApp={handleAddApp} />} />
+          <Route path="/follow-ups" element={<FollowUpsPage handleAddFollowUp={handleAddFollowUp} />} />
           </>
         ) : (
           <>
