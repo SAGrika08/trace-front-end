@@ -70,6 +70,7 @@ const handleUpdateFollowUp = async (appId, followUpId, followUpFormData) => {
           <Route path='/applications' element={<AppList applications={applications} />} />
           <Route path='/applications/:appId' element={<AppDetails/>} />
           <Route path="/applications/new" element={<AppForm handleAddApp={handleAddApp} />} />
+          <Route path="/follow-ups" element={<FollowUpsPage handleAddFollowUp={handleAddFollowUp} handleDeleteFollowUp={handleDeleteFollowUp} handleUpdateFollowUp={handleUpdateFollowUp} />} />
           </>
         ) : (
           <>

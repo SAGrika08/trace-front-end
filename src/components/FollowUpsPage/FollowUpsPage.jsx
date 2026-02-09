@@ -187,16 +187,12 @@ const FollowUpsPage = (props) => {
                   {followUp.isDone ? <strong>✓ Done</strong> : "Pending"}
                 </td>
                 <td style={{ padding: "10px" }}>
-                  {followUp.author && followUp.author._id === user._id && (
-                    <>
-                      <button onClick={() => handleEdit(followUp)}>
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(followUp.appId, followUp._id)}>
-                        Delete
-                      </button>
-                    </>
-                  )}
+                  <button onClick={() => handleEdit(followUp)}>
+                    Edit
+                  </button>
+                  <button onClick={() => handleDelete(followUp.appId, followUp._id)}>
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
