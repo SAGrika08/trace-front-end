@@ -97,7 +97,6 @@ const Dashboard = () => {
 };
 
   const getAppDateLabel = (app) => {
-    // show appliedDate if present, otherwise createdAt
     return app.appliedDate ? formatDate(app.appliedDate) : formatDate(app.createdAt);
   };
 
