@@ -106,7 +106,7 @@ const handleDeleteCheckIn = async (appId, checkInId) => {
           {user ? (
           <>
           <Route path='/applications' element={<AppList applications={applications} />} />
-          <Route path='/applications/:appId' element={<AppDetails handleDeleteApp={handleDeleteApp} handleUpdateCheckIn={handleUpdateCheckIn} handleDeleteCheckIn={handleDeleteCheckIn} />} />
+          <Route path='/applications/:appId' element={<AppDetails handleDeleteApp={handleDeleteApp} handleUpdateCheckIn={handleUpdateCheckIn} handleDeleteCheckIn={handleDeleteCheckIn} handleUpdateFollowUp={handleUpdateFollowUp} handleDeleteFollowUp={handleDeleteFollowUp} />} />
           <Route path="/applications/new" element={<AppForm handleAddApp={handleAddApp} />} />
           <Route path="/applications/:appId/edit" element={<AppForm handleUpdateApp={handleUpdateApp} />} />
           <Route path="/follow-ups" element={<FollowUpsPage handleAddFollowUp={handleAddFollowUp} handleDeleteFollowUp={handleDeleteFollowUp} handleUpdateFollowUp={handleUpdateFollowUp} />} />

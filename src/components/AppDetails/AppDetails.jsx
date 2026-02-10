@@ -12,6 +12,11 @@ const AppDetails = (props) => {
     const [followUps, setFollowUps] = useState([]);
   const [checkIns, setCheckIns] = useState([]);
   const [editingCheckIn, setEditingCheckIn] = useState(null);
+  const [editingFollowUpId, setEditingFollowUpId] = useState(null);
+  const [followUpEditData, setFollowUpEditData] = useState({
+    dueDate: "",
+    note: "",
+  });
     console.log('appId', appId);
  
 const [followUpFormData, setFollowUpFormData] = useState({
@@ -62,13 +67,55 @@ const handleAddFollowUp = async (evt) => {
 
 
   const getDueStatus = (dueDate) => {
-    if (!dueDate) return "";
+    if (!dueDate) return "No due date";
     const due = new Date(dueDate);
     const today = new Date();
     due.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
     return due < today ? "Overdue" : "Upcoming";
   };
+
+const startEditFollowUp = (followUp) => {
+  setEditingFollowUpId(followUp._id);
+  setFollowUpEditData({
+    dueDate: followUp.dueDate ? followUp.dueDate.split("T")[0] : "",
+    note: followUp.note || "",
+  });
+};
+
+const handleEditFollowUpChange = (evt) => {
+  const { name, value } = evt.target;
+  setFollowUpEditData({ ...followUpEditData, [name]: value });
+};
+
+const cancelEditFollowUp = () => {
+  setEditingFollowUpId(null);
+  setFollowUpEditData({ dueDate: "", note: "" });
+};
+
+const saveEditFollowUp = async (followUp) => {
+  await props.handleUpdateFollowUp(appId, followUp._id, {
+    dueDate: followUpEditData.dueDate,
+    note: followUpEditData.note,
+  });
+  setEditingFollowUpId(null);
+  setFollowUpEditData({ dueDate: "", note: "" });
+  fetchApp();
+};
+
+const handleDeleteFollowUp = async (followUpId) => {
+  await props.handleDeleteFollowUp(appId, followUpId);
+  fetchApp();
+};
+
+const formatDate = (dateValue) => {
+  if (!dateValue) return "—";
+  return new Date(dateValue).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
 
 const handleCheckInChange = (evt) => {
   setCheckInFormData({
@@ -123,17 +170,18 @@ const handleDeleteCheckIn = async (checkInId) => {
 };
 
 const handleDeleteApp = async () => {
-  if (window.confirm(`Are you sure you want to delete ${app.company}?`)) 
-    {
-    try {
-      await props.handleDeleteApp(appId);
-    } catch (error) {
-      console.error('Error deleting app:', error);
-      alert('Failed to delete application. Please try again.');
-    }
-  }
+  if (window.confirm(`Are you sure you want to delete ${app.company}?`)) {
+    try {
+      await props.handleDeleteApp(appId);
+    } catch (error) {
+      console.error('Error deleting app:', error);
+      alert('Failed to delete application. Please try again.');
+    }
+  }
 };
 
+
+//fix
   if (!app) return <main>Loading application...</main>;
 
 
@@ -202,18 +250,70 @@ const isWorking = app.status === "working";
           {followUps.length === 0 ? (
             <p>No follow-ups yet.</p>
           ) : (
-            followUps.map((followup) => (
-              <div key={followup._id}>
-                <p>
-                  Due:{" "}
-                  {followup.dueDate
-                    ? new Date(followup.dueDate).toLocaleDateString()
-                    : "Not set"}
-                </p>
-                <p>{followup.note}</p>
-                <p>Status: {getDueStatus(followup.dueDate)}</p>
-              </div>
-            ))
+            <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
+              <thead>
+                <tr style={{ borderBottom: "2px solid #333" }}>
+                  <th style={{ padding: "10px", textAlign: "left" }}>Due Date</th>
+                  <th style={{ padding: "10px", textAlign: "left" }}>Note</th>
+                  <th style={{ padding: "10px", textAlign: "left" }}>Status</th>
+                  <th style={{ padding: "10px", textAlign: "left" }}></th>
+                </tr>
+              </thead>
+              <tbody>
+                {followUps.map((followup) => (
+                  <tr key={followup._id} style={{ borderBottom: "1px solid #ddd" }}>
+                    <td style={{ padding: "10px" }}>
+                      {editingFollowUpId === followup._id ? (
+                        <input
+                          type="date"
+                          name="dueDate"
+                          value={followUpEditData.dueDate}
+                          onChange={handleEditFollowUpChange}
+                        />
+                      ) : followup.dueDate ? (
+                        formatDate(followup.dueDate)
+                      ) : (
+                        "Not set"
+                      )}
+                    </td>
+                    <td style={{ padding: "10px" }}>
+                      {editingFollowUpId === followup._id ? (
+                        <input
+                          type="text"
+                          name="note"
+                          value={followUpEditData.note}
+                          onChange={handleEditFollowUpChange}
+                        />
+                      ) : (
+                        followup.note || "—"
+                      )}
+                    </td>
+                    <td style={{ padding: "10px" }}>{getDueStatus(followup.dueDate)}</td>
+                    <td style={{ padding: "10px" }}>
+                      {editingFollowUpId === followup._id ? (
+                        <>
+                          <button type="button" onClick={() => saveEditFollowUp(followup)}>
+                            Save
+                          </button>
+                          <button type="button" onClick={cancelEditFollowUp}>
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button type="button" onClick={() => startEditFollowUp(followup)}>
+                            Edit
+                          </button>
+                          <button type="button" onClick={() => handleDeleteFollowUp(followup._id)}>
+                            Delete
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </>
       ) : (
@@ -224,8 +324,7 @@ const isWorking = app.status === "working";
             <select
               name="mood"
               id="mood-input"
-              value={checkInFormData.mood}
-              onChange={handleCheckInChange}
+              value={checkInFormData.mlshange}
             >
               <option value="1">1</option>
               <option value="2">2</option>
