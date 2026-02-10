@@ -1,7 +1,7 @@
 
 
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { signUp } from '../../services/authService';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -47,7 +47,8 @@ const SignUpForm = () => {
 
   return (
     <main>
-      <h1>Sign Up</h1>
+      <h1>Create an account</h1>
+    <p>Create an account to start tracking your job search.</p>
 
       {message && <p>{message}</p>}
 
@@ -60,6 +61,7 @@ const SignUpForm = () => {
             name="username"
             value={username}
             onChange={handleChange}
+            placeholder="your username"
             required
           />
         </div>
@@ -72,6 +74,7 @@ const SignUpForm = () => {
             name="email"
             value={email}
             onChange={handleChange}
+            placeholder="you@example.com"
           />
         </div>
 
@@ -83,6 +86,7 @@ const SignUpForm = () => {
             name="password"
             value={password}
             onChange={handleChange}
+            placeholder="••••••••"
             required
           />
         </div>
@@ -95,6 +99,7 @@ const SignUpForm = () => {
             name="passwordConf"
             value={passwordConf}
             onChange={handleChange}
+            placeholder="••••••••"
             required
           />
         </div>
@@ -106,6 +111,9 @@ const SignUpForm = () => {
           <button type="button" onClick={() => navigate("/")}>
             Cancel
           </button>
+          <p>
+            Already have an account? <Link to="/sign-in">Sign in</Link>
+        </p>
         </div>
       </form>
     </main>

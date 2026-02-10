@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 
 import { signIn } from "../../services/authService";
 import { UserContext } from "../../contexts/UserContext";
@@ -38,6 +38,7 @@ const SignInForm = () => {
   return (
     <main>
       <h1>Sign In</h1>
+    <p>Enter your username and password to sign in.</p>
       {message && <p>{message}</p>}
 
       <form autoComplete="off" onSubmit={handleSubmit}>
@@ -49,6 +50,7 @@ const SignInForm = () => {
             name="username"
             value={formData.username}
             onChange={handleChange}
+            placeholder="your username"
             required
           />
         </div>
@@ -61,6 +63,7 @@ const SignInForm = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
+            placeholder="••••••••"
             required
           />
         </div>
@@ -70,6 +73,9 @@ const SignInForm = () => {
           <button type="button" onClick={() => navigate("/")}>
             Cancel
           </button>
+          <p>
+            Don’t have an account? <Link to="/sign-up">Sign up</Link>
+        </p>
         </div>
       </form>
     </main>

@@ -100,7 +100,7 @@ const handleDeleteCheckIn = async (appId, checkInId) => {
   
   return (
     <>
-      <NavBar />
+        {user && <NavBar />}
       <Routes>
          <Route path='/' element={user ? <Dashboard /> : <Landing /> } />
           {user ? (

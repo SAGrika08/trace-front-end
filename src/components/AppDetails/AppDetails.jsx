@@ -122,10 +122,16 @@ const handleDeleteCheckIn = async (checkInId) => {
   }
 };
 
-const handleDeleteApp = () => {
-  if (window.confirm(`Are you sure you want to delete ${app.company}?`)) {
-    props.handleDeleteApp(appId);
-  }
+const handleDeleteApp = async () => {
+  if (window.confirm(`Are you sure you want to delete ${app.company}?`)) 
+    {
+    try {
+      await props.handleDeleteApp(appId);
+    } catch (error) {
+      console.error('Error deleting app:', error);
+      alert('Failed to delete application. Please try again.');
+    }
+  }
 };
 
   if (!app) return <main>Loading application...</main>;

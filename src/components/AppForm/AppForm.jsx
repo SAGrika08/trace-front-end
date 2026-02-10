@@ -70,6 +70,21 @@ const AppForm = (props) => {
     <main>
       <h1>{appId ? 'Edit Application' : 'Add Application'}</h1>
 
+    <p className="form-subtext">
+  {appId ? (
+    <>
+      Use this form to update an application.
+      <br />
+      Change the status, dates, or notes to reflect what’s happened so far.
+    </>
+  ) : (
+    <>
+      Use this form to save a job you have applied to or want to keep track of.
+      <br />
+      You don't need every detail right now, add what you know and update it as things move forward.
+    </>
+  )}
+</p>
       <form onSubmit={handleSubmit}>
         <label htmlFor="company-input">Company</label>
         <input
@@ -159,7 +174,8 @@ const AppForm = (props) => {
           onChange={handleChange}
         />
 
-        <button type="submit">{appId ? 'UPDATE' : 'SUBMIT'}</button>
+        <button type="submit">{appId ? 'Update' : 'Submit'}</button>
+         <button type="button" onClick={() => navigate(-1)}>Cancel</button>
       </form>
     </main>
   );
