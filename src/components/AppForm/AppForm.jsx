@@ -35,6 +35,10 @@ const AppForm = (props) => {
   return (
     <main>
       <h1>Add Application</h1>
+      <p>
+    Add a role you’re applying to so you can keep everything in one place. Fill in what you know now,
+    you can always come back later to update details, add follow-ups, or change the status.
+    </p>
 
       <form onSubmit={handleSubmit}>
         <label htmlFor="company-input">Company</label>
