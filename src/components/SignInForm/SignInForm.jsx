@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router";
 
 import { signIn } from "../../services/authService";
 import { UserContext } from "../../contexts/UserContext";
+import LogoV from '../../assets/images/logo-v.svg';
+import styles from './SignInForm.module.css';
 
 const SignInForm = () => {
   const navigate = useNavigate();
@@ -36,12 +38,15 @@ const SignInForm = () => {
   };
 
   return (
-    <main>
-      <h1>Sign In</h1>
-    <p>Enter your username and password to sign in.</p>
-      {message && <p>{message}</p>}
-
-      <form autoComplete="off" onSubmit={handleSubmit}>
+    <main className={styles.container}>
+      <section>
+        <img src={LogoV} alt='Logo' />
+      </section>
+      <section>
+        <form autoComplete="off" onSubmit={handleSubmit}>
+          <h1>Sign In</h1>
+          <p>Enter your username and password to sign in.</p>
+          {message && <p>{message}</p>}
         <div>
           <label htmlFor="username">Username:</label>
           <input
@@ -77,7 +82,8 @@ const SignInForm = () => {
             Don’t have an account? <Link to="/sign-up">Sign up</Link>
         </p>
         </div>
-      </form>
+        </form>
+      </section>
     </main>
   );
 };

@@ -1,42 +1,158 @@
 /* src/components/NavBar/NavBar.module.css */
 
 .container {
+  left: 0;
   top: 0;
-  z-index: 1;
-  width: 100%;
-  height: 80px;
+  z-index: 900;
+  width: 250px;
+  height: 100vh;
   display: flex;
   position: fixed;
-  padding: 14px 21px;
-  align-items: center;
-  background: white;
-  border-bottom: 1px solid rgb(200, 200, 200);
+  flex-direction: column;
+  padding: 10px 0;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
 }
 
-.container img {
-  width: 50px;
+.container.closed {
+  display: none;
 }
 
-.container ul {
-  margin: 0;
-  width: 100%;
+.header {
   display: flex;
-  list-style: none;
-  font-weight: bold;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
+  padding: 15px 20px;
 }
 
-.container li {
-  margin-left: 35px;
-  text-align: right;
+.logoLink {
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.logo {
+  width: 60px;
+  height: auto;
+}
+
+.menuSection {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-shadow: none;
+}
+
+
+.menuItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.icon {
+  font-size: 20px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+  display: none;
+}
+
+.authSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  margin-top: auto;
+}
+
+.authLink {
+  padding: 10px 16px;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.authLink:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.toggleButton {
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  z-index: 1000;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.toggleButton:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
 }
 
 @media only screen and (max-width: 414px) {
-  .container ul {
-    padding-left: 0px;
+  .container {
+    width: 200px;
   }
-  .container li {
-    font-size: 15px;
+
+  .label {
+    font-size: 13px;
   }
 }

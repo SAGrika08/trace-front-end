@@ -4,6 +4,8 @@ import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router";
 import { signUp } from '../../services/authService';
 import { UserContext } from '../../contexts/UserContext';
+import LogoV from '../../assets/images/logo-v.svg';
+import styles from './SignUpForm.module.css';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -46,13 +48,16 @@ const SignUpForm = () => {
   };
 
   return (
-    <main>
-      <h1>Create an account</h1>
-    <p>Create an account to start tracking your job search.</p>
+    <main className={styles.container}>
+      <section>
+        <img src={LogoV} alt='Logo' />
+      </section>
+      <section>
+        <form onSubmit={handleSubmit}>
+          <h1>Create an account</h1>
+          <p>Create an account to start tracking your job search.</p>
 
-      {message && <p>{message}</p>}
-
-      <form onSubmit={handleSubmit}>
+          {message && <p>{message}</p>}
         <div>
           <label htmlFor="username">Username:</label>
           <input
@@ -115,7 +120,8 @@ const SignUpForm = () => {
             Already have an account? <Link to="/sign-in">Sign in</Link>
         </p>
         </div>
-      </form>
+        </form>
+      </section>
     </main>
   );
 };
