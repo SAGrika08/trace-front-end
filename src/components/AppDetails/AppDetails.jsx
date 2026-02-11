@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import * as appService from '../../services/appService';
 import * as appFollowUp from '../../services/appFollowUp.js';
 import * as checkInService from '../../services/checkInService';
+import styles from "./AppDetails.module.css";
+import { Briefcase, Pencil, Trash2, Save, X } from "lucide-react";
 
 
 
@@ -161,221 +163,360 @@ const handleDeleteApp = async () => {
 const visibleFollowUps = followUps.filter((followUp) => !followUp.isDone);
 
 const handleComplete = async (followUp) => {
-  setFollowUps((prev) => prev.filter((f) => f._id !== followUp._id));
-  await props.handleUpdateFollowUp(appId, followUp._id, {
-    isDone: true,
-  });
+   setTimeout(() => {
+    setFollowUps((prev) => prev.filter((f) => f._id !== followUp._id));
+  }, 150);
+
+  await props.handleUpdateFollowUp(appId, followUp._id, { isDone: true });
   fetchApp();
 };
 
+const moodEmoji = (mood) => {
+  switch (Number(mood)) {
+    case 1:
+      return "😣";
+    case 2:
+      return "🙁";
+    case 3:
+      return "😐";
+    case 4:
+      return "🙂";
+    case 5:
+      return "😄";
+    default:
+      return "—";
+  }
+};
 
-//fix
   if (!app) return <main>Loading application...</main>;
 
 
 const isWorking = app.status === "working";
 
   return (
-    <main>
-      <h1>{app.company}</h1>
+  <main className={styles.container}>
+    <section className={`${styles.card} ${styles.cardInner}`}>
+      <div className={styles.headerRow}>
+        <div className={styles.titleBlock}>
+          <h1 className={styles.title}>
+            <Briefcase className={`${styles.iconMuted} ${styles.companyIcon}`} />
+            {app.company}
+          </h1>
+        </div>
 
-      <p><strong>Role:</strong> {app.roleTitle}</p>
-      <p><strong>Status:</strong> {app.status}</p>
-      <p><strong>Industry:</strong> {app.industry}</p>
+        <div className={styles.actions}>
+          <Link to={`/applications/${appId}/edit`}>
+            <button
+              className={styles.iconBtn}
+              type="button"
+              aria-label="Edit application"
+            >
+              <Pencil className={styles.iconMuted} />
+            </button>
+          </Link>
 
-      <p>
-        <strong>Applied Date:</strong>{" "}
+          <button
+            className={styles.iconBtn}
+            type="button"
+            onClick={handleDeleteApp}
+            aria-label="Delete application"
+          >
+            <Trash2 className={styles.iconMuted} />
+          </button>
+        </div>
+      </div>
+    <div className={styles.metaColumns}>
+  <div className={styles.metaCol}>
+    <div className={styles.field}>
+      <div className={styles.label}>Role</div>
+      <div className={styles.value}>{app.roleTitle || "Not set"}</div>
+    </div>
+
+    <div className={styles.field}>
+      <div className={styles.label}>Status</div>
+      <div className={styles.value}>{app.status}</div>
+    </div>
+
+    <div className={styles.field}>
+      <div className={styles.label}>Industry</div>
+      <div className={styles.value}>{app.industry}</div>
+    </div>
+  </div>
+
+  <div className={styles.metaCol}>
+    <div className={styles.field}>
+      <div className={styles.label}>Applied date</div>
+      <div className={styles.value}>
         {app.appliedDate ? formatDate(app.appliedDate) : "Not set"}
-      </p>
+      </div>
+    </div>
 
-      <p><strong>Location:</strong> {app.location || "Not set"}</p>
-      <p><strong>Salary Range:</strong> {app.salaryRange || "Not set"}</p>
+    <div className={styles.field}>
+      <div className={styles.label}>Location</div>
+      <div className={styles.value}>{app.location || "Not set"}</div>
+    </div>
 
-      <p><strong>Further Details:</strong></p>
-      <p>{app.furtherDetails || "None"}</p>
+    <div className={styles.field}>
+      <div className={styles.label}>Salary range</div>
+      <div className={styles.value}>{app.salaryRange || "Not set"}</div>
+    </div>
+  </div>
 
-      <p>
-        <strong>Created:</strong>{" "}
-        {formatDate(app.createdAt)}
-      </p>
+  <div className={styles.detailsWide}>
+    <div className={styles.field}>
+      <div className={styles.label}>Further details</div>
+      <div className={`${styles.value} ${styles.longText}`}>
+        {app.furtherDetails || "None"}
+      </div>
+    </div>
+  </div>
+      </div>
+    </section>
 
-      <p>
-        <strong>Last Updated:</strong>{" "}
-        {formatDate(app.updatedAt)}
-      </p>
+    {!isWorking ? (
+      <>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Follow-Ups</h2>
+          <p className={`${styles.muted} ${styles.sectionSub}`}>
+            Keep track of the next steps, mark it done when you’ve followed up.
+          </p>
+        </div>
 
-      <Link to={`/applications/${appId}/edit`}>
-        <button>Edit</button>
-      </Link>
-      <button onClick={handleDeleteApp}>Delete</button>
+        {visibleFollowUps.length === 0 ? (
+          <section className={`${styles.card} ${styles.emptyCard}`}>
+            <p className={styles.muted}>No follow-ups yet.</p>
+          </section>
+        ) : (
+          <section className={`${styles.card} ${styles.tableCard}`}>
+  <div className={styles.tableWrap}>
+    <table className={styles.table}>
+      <thead className={styles.thead}>
+        <tr>
+          <th></th>
+          <th>Due Date</th>
+          <th>Note</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
 
-       {!isWorking ? (
-        <>
-          <h2>Follow-Ups</h2>
-         <form onSubmit={handleAddFollowUp}>
-            <label htmlFor="dueDate-input">Due Date</label>
-            <input
-              type="date"
-              name="dueDate"
-              id="dueDate-input"
-              value={followUpFormData.dueDate}
-              onChange={handleFollowUpChange}
-            />
+      <tbody className={styles.tbody}>
+        {visibleFollowUps.map((followup) => (
+          <tr key={followup._id} className={styles.row}>
+            <td data-label="Done">
+              <input
+                type="checkbox"
+                onChange={() => handleComplete(followup)}
+                disabled={editingFollowUpId === followup._id}
+              />
+            </td>
+            <td data-label="Due Date">
+              {editingFollowUpId === followup._id ? (
+                <input
+                  type="date"
+                  name="dueDate"
+                  value={followUpEditData.dueDate}
+                  onChange={handleEditFollowUpChange}
+                />
+              ) : followup.dueDate ? (
+                formatDate(followup.dueDate)
+              ) : (
+                "Not set"
+              )}
+            </td>
+            <td data-label="Note">
+              {editingFollowUpId === followup._id ? (
+                <input
+                  type="text"
+                  name="note"
+                  value={followUpEditData.note}
+                  onChange={handleEditFollowUpChange}
+                />
+              ) : (
+                followup.note || "—"
+              )}
+            </td>
+            <td data-label="Status">
+              {getDueStatus(followup.dueDate)}
+            </td>
+            <td className={styles.actionCell} data-label="Actions">
+                <div className={styles.actionGroup}>
+              {editingFollowUpId === followup._id ? (
+                <>
+                  <button
+                    className={styles.miniIconBtn}
+                    type="button"
+                    onClick={() => saveEditFollowUp(followup)}
+                    aria-label="Save"
+                  >
+                    <Save className={styles.miniIcon} />
+                  </button>
 
-            <label htmlFor="note-input">Note</label>
-            <textarea
-              name="note"
-              id="note-input"
-              value={followUpFormData.note}
-              onChange={handleFollowUpChange}
-              placeholder="write follow up email, ask for timeline, send thank you note..."
-            />
+                  <button
+                    className={styles.miniIconBtn}
+                    type="button"
+                    onClick={cancelEditFollowUp}
+                    aria-label="Cancel"
+                  >
+                    <X className={styles.miniIcon} />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className={styles.miniIconBtn}
+                    type="button"
+                    onClick={() => startEditFollowUp(followup)}
+                    aria-label="Edit"
+                  >
+                    <Pencil className={styles.miniIcon} />
+                  </button>
+
+                  <button
+                    className={styles.miniIconBtn}
+                    type="button"
+                    onClick={() => handleDeleteFollowUp(followup._id)}
+                    aria-label="Delete"
+                  >
+                    <Trash2 className={styles.miniIcon} />
+                  </button>
+                </>
+              )}
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
+        )}
+
+        <section className={`${styles.card} ${styles.formCard}`}>
+          <form onSubmit={handleAddFollowUp} className={styles.formGrid}>
+            <div>
+              <div>
+                <label htmlFor="dueDate-input">Due Date</label>
+                <input
+                  type="date"
+                  name="dueDate"
+                  id="dueDate-input"
+                  value={followUpFormData.dueDate}
+                  onChange={handleFollowUpChange}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="note-input">Note</label>
+                <textarea
+                  name="note"
+                  id="note-input"
+                  value={followUpFormData.note}
+                  onChange={handleFollowUpChange}
+                  placeholder="write follow up email, ask for timeline, send thank you note..."
+                />
+              </div>
+            </div>
 
             <button type="submit">Add Follow-Up</button>
           </form>
-          {visibleFollowUps.length === 0 ? (
-            <p>No follow-ups yet.</p>
-          ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
-              <thead>
-                <tr style={{ borderBottom: "2px solid #333" }}>
-                  <th style={{ padding: "10px", textAlign: "center" }}></th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>Due Date</th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>Note</th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>Status</th>
-                  <th style={{ padding: "10px", textAlign: "left" }}></th>
-                </tr>
-              </thead>
-              <tbody>
-                {visibleFollowUps.map((followup) => (
-                  <tr key={followup._id} style={{ borderBottom: "1px solid #ddd" }}>
-                    <td style={{ padding: "10px", textAlign: "center" }}>
-                      <input
-                        type="checkbox"
-                        onChange={() => handleComplete(followup)}
-                        disabled={editingFollowUpId === followup._id}
-                      />
-                    </td>
-                    <td style={{ padding: "10px" }}>
-                      {editingFollowUpId === followup._id ? (
-                        <input
-                          type="date"
-                          name="dueDate"
-                          value={followUpEditData.dueDate}
-                          onChange={handleEditFollowUpChange}
-                        />
-                      ) : followup.dueDate ? (
-                        formatDate(followup.dueDate)
-                      ) : (
-                        "Not set"
-                      )}
-                    </td>
-                    <td style={{ padding: "10px" }}>
-                      {editingFollowUpId === followup._id ? (
-                        <input
-                          type="text"
-                          name="note"
-                          value={followUpEditData.note}
-                          onChange={handleEditFollowUpChange}
-                        />
-                      ) : (
-                        followup.note || "—"
-                      )}
-                    </td>
-                    <td style={{ padding: "10px" }}>{getDueStatus(followup.dueDate)}</td>
-                    <td style={{ padding: "10px" }}>
-                      {editingFollowUpId === followup._id ? (
-                        <>
-                          <button type="button" onClick={() => saveEditFollowUp(followup)}>
-                            Save
-                          </button>
-                          <button type="button" onClick={cancelEditFollowUp}>
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button type="button" onClick={() => startEditFollowUp(followup)}>
-                            Edit
-                          </button>
-                          <button type="button" onClick={() => handleDeleteFollowUp(followup._id)}>
-                            Delete
-                          </button>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </>
-      ) : (
-        <>
-        <h2>Check-Ins</h2>
-         <form onSubmit={handleAddCheckIn}>
-            <label htmlFor="mood-input">Mood (1–5)</label>
-            <select
-              name="mood"
-              id="mood-input"
-              value={checkInFormData.mood}
-              onChange={handleCheckInChange}
-            >
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
+        </section>
+      </>
+    ) : (
+      <>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Check-Ins</h2>
+          <p className={`${styles.muted} ${styles.sectionSub}`}>
+            Quick notes to reflect and spot patterns over time.
+          </p>
+        </div>
 
-            <label htmlFor="checkin-note-input">Note</label>
-            <textarea
-              name="note"
-              id="checkin-note-input"
-              value={checkInFormData.note}
-              onChange={handleCheckInChange}
-              placeholder="how is work going this week?"
-            />
+        {checkIns.length === 0 ? (
+          <section className={`${styles.card} ${styles.emptyCard}`}>
+            <p className={styles.muted}>No check-ins yet. Add your first check-in.</p>
+          </section>
+        ) : (
+          <section className={`${styles.card} ${styles.tableCard}`}>
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead className={styles.thead}>
+                  <tr>
+                    <th className={styles.dateCol}>Date</th>
+                    <th className={styles.moodCol}>Mood</th>
+                    <th>Note</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+                <tbody className={styles.tbody}>
+                  {checkIns.map((checkin) => (
+                    <tr key={checkin._id} className={styles.row}>
+                      <td data-label="Date">
+                        {checkin.date
+                          ? formatDate(checkin.date)
+                          : checkin.createdAt
+                          ? formatDate(checkin.createdAt)
+                          : "—"}
+                      </td>
+
+                  <td data-label="Mood">  <span className={styles.moodEmoji}>{moodEmoji(checkin.mood)}
+                    </span>
+                  </td>
+                      <td data-label="Note">{checkin.note || "—"}</td>
+
+                      <td className={styles.actionCell} data-label="Actions">
+                          <div className={styles.actionGroup}>
+                        <button className={styles.miniIconBtn} type="button" onClick={() => handleDeleteCheckIn(checkin._id)} aria-label="Delete">
+                            <Trash2 className={styles.miniIcon} />
+                        </button>
+                        </div>
+                        </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
+        <section className={`${styles.card} ${styles.formCard}`}>
+          <form onSubmit={handleAddCheckIn} className={styles.formGrid}>
+            <div>
+              <div>
+                <label htmlFor="mood-input">Mood</label>
+                <select
+                  name="mood"
+                  id="mood-input"
+                  value={checkInFormData.mood}
+                  onChange={handleCheckInChange}
+                >
+                  <option value="1">😣 Rough</option>
+                  <option value="2">🙁 Low</option>
+                  <option value="3">😐 Okay</option>
+                  <option value="4">🙂 Good</option>
+                  <option value="5">😄 Great</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="checkin-note-input">Note</label>
+                <textarea
+                  name="note"
+                  id="checkin-note-input"
+                  value={checkInFormData.note}
+                  onChange={handleCheckInChange}
+                  placeholder="how is work going this week?"
+                />
+              </div>
+            </div>
 
             <button type="submit">Add Check-In</button>
           </form>
-
-        {checkIns.length === 0 ? (
-         <p>No check-ins yet. Add your first check-in.</p>
-    ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
-          <thead>
-            <tr style={{ borderBottom: "2px solid #333" }}>
-              <th style={{ padding: "10px", textAlign: "left" }}>Date</th>
-              <th style={{ padding: "10px", textAlign: "left" }}>Mood</th>
-              <th style={{ padding: "10px", textAlign: "left" }}>Note</th>
-              <th style={{ padding: "10px", textAlign: "left" }}></th>
-            </tr>
-          </thead>
-          <tbody>
-            {checkIns.map((checkin) => (
-              <tr key={checkin._id} style={{ borderBottom: "1px solid #ddd" }}>
-                <td style={{ padding: "10px" }}>
-                  {checkin.date
-                    ? formatDate(checkin.date)
-                    : checkin.createdAt
-                    ? formatDate(checkin.createdAt)
-                    : "—"}
-                </td>
-                <td style={{ padding: "10px" }}>{checkin.mood}</td>
-                <td style={{ padding: "10px" }}>{checkin.note || "—"}</td>
-                <td style={{ padding: "10px" }}>
-                  <button type="button" onClick={() => handleDeleteCheckIn(checkin._id)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-  )}
-  </>
- )}
-    </main>
-  );
-};
+        </section>
+      </>
+    )}
+  </main>
+);
+}; 
 
 export default AppDetails;

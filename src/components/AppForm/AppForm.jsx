@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import * as appService from "../../services/appService";
+import styles from "./AppForm.module.css";
+import { PlusCircle, Pencil } from "lucide-react";
 
 const AppForm = (props) => {
   const navigate = useNavigate();
@@ -67,10 +69,21 @@ const AppForm = (props) => {
 };
 
   return (
-    <main>
-      <h1>{appId ? 'Edit Application' : 'Add Application'}</h1>
+  <main className={styles.page}>
+    <section className={styles.card}>
+      <div className={styles.header}>
+      <h1 className={styles.title}> {appId ? (
+            <Pencil className={styles.titleIcon} />
+          ) : (
+            <PlusCircle className={styles.titleIcon} />
+          )}
+          {appId ? "Edit Application" : "Add Application"}
+        </h1>
+ 
+        <div className={styles.accentLine} />
+      </div>
 
-    <p className="form-subtext">
+    <p className={styles.subtext}>
   {appId ? (
     <>
       Use this form to update an application.
@@ -85,7 +98,9 @@ const AppForm = (props) => {
     </>
   )}
 </p>
-      <form onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <div className={styles.grid}>
+          <div className={styles.field}>
         <label htmlFor="company-input">Company</label>
         <input
           required
@@ -95,7 +110,9 @@ const AppForm = (props) => {
           value={formData.company}
           onChange={handleChange}
         />
+        </div>
 
+        <div className={styles.field}>
         <label htmlFor="roleTitle-input">Role Title</label>
         <input
           required
@@ -105,8 +122,9 @@ const AppForm = (props) => {
           value={formData.roleTitle}
           onChange={handleChange}
         />
-
-        <label htmlFor="industry-input">Industry</label>
+        </div>
+        <div className={styles.field}>
+             <label htmlFor="industry-input">Industry</label>
         <select
           name="industry"
           id="industry-input"
@@ -122,7 +140,8 @@ const AppForm = (props) => {
           <option value="startup">startup</option>
           <option value="other">other</option>
         </select>
-
+        </div>
+        <div className={styles.field}>
         <label htmlFor="status-input">Status</label>
         <select
           name="status"
@@ -138,7 +157,9 @@ const AppForm = (props) => {
           <option value="withdrawn">withdrawn</option>
           <option value="bookmark">bookmark</option>
         </select>
+        </div>
 
+        <div className={styles.field}>
         <label htmlFor="appliedDate-input">Applied Date</label>
         <input
           type="date"
@@ -147,7 +168,9 @@ const AppForm = (props) => {
           value={formData.appliedDate}
           onChange={handleChange}
         />
+        </div>
 
+        <div className={styles.field}>
         <label htmlFor="location-input">Location</label>
         <input
           type="text"
@@ -156,7 +179,9 @@ const AppForm = (props) => {
           value={formData.location}
           onChange={handleChange}
         />
+          </div>
 
+        <div className={`${styles.field} ${styles.span2}`}>
         <label htmlFor="salaryRange-input">Salary Range</label>
         <input
           type="text"
@@ -165,7 +190,9 @@ const AppForm = (props) => {
           value={formData.salaryRange}
           onChange={handleChange}
         />
+          </div>
 
+     <div className={`${styles.field} ${styles.span2}`}>
         <label htmlFor="furtherDetails-input">Further Details</label>
         <textarea
           name="furtherDetails"
@@ -173,10 +200,15 @@ const AppForm = (props) => {
           value={formData.furtherDetails}
           onChange={handleChange}
         />
+          </div>  
+          </div>
 
+  <div className={styles.buttonRow}>
         <button type="submit">{appId ? 'Update' : 'Submit'}</button>
          <button type="button" onClick={() => navigate(-1)}>Cancel</button>
+         </div>
       </form>
+      </section>
     </main>
   );
 };
