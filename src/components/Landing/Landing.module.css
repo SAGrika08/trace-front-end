@@ -67,6 +67,43 @@ Copy
   line-height: 28px;
 }
 
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.featureCard {
+  padding: 30px 25px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background-color: #fafafa;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.featureCard:hover {
+  border-color: #00a0df;
+  box-shadow: 0 4px 12px rgba(0, 160, 223, 0.1);
+  transform: translateY(-4px);
+}
+
+.featureCard h3 {
+  margin: 0 0 15px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.featureCard p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #666;
+}
+
 .container section > header * {
   margin: 0px;
   font-weight: 600;
