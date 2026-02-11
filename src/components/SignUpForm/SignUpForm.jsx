@@ -48,80 +48,90 @@ const SignUpForm = () => {
   };
 
   return (
-    <main className={styles.container}>
-      <section>
-        <img src={LogoV} alt='Logo' />
-      </section>
-      <section>
-        <form onSubmit={handleSubmit}>
-          <h1>Create an account</h1>
-          <p>Create an account to start tracking your job search.</p>
-
-          {message && <p>{message}</p>}
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={handleChange}
-            placeholder="your username"
-            required
-          />
+    <main className={styles.page}>
+      <div className={styles.shell}>
+        <div className={styles.brand}>
+          <img src={LogoV} alt="Trace logo" className={styles.logo} />
         </div>
 
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={handleChange}
-            placeholder="you@example.com"
-          />
-        </div>
+        <section className={styles.card}>
+          <h1 className={styles.title}>Create an account</h1>
+          <p className={styles.subtext}>Create an account to start tracking your job search.</p>
 
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={handleChange}
-            placeholder="••••••••"
-            required
-          />
-        </div>
+          {message && <p className={styles.error}>{message}</p>}
 
-        <div>
-          <label htmlFor="passwordConf">Confirm Password:</label>
-          <input
-            type="password"
-            id="passwordConf"
-            name="passwordConf"
-            value={passwordConf}
-            onChange={handleChange}
-            placeholder="••••••••"
-            required
-          />
-        </div>
+          <form className={styles.form} autoComplete="off" onSubmit={handleSubmit}>
+            <div className={styles.field}>
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={username}
+                onChange={handleChange}
+                placeholder="your username"
+                required
+              />
+            </div>
 
-        <div>
-          <button type="submit" disabled={isFormInvalid()}>
-            Sign Up
-          </button>
-          <button type="button" onClick={() => navigate("/")}>
-            Cancel
-          </button>
-          <p>
-            Already have an account? <Link to="/sign-in">Sign in</Link>
-        </p>
-        </div>
-        </form>
-      </section>
+            <div className={styles.field}>
+              <label htmlFor="email">Email </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="passwordConf">Confirm password</label>
+              <input
+                type="password"
+                id="passwordConf"
+                name="passwordConf"
+                value={passwordConf}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div className={styles.actions}>
+              <button type="submit" disabled={isFormInvalid()}>
+                Sign Up
+              </button>
+
+              <button
+                type="button"
+                className={styles.secondaryBtn}
+                onClick={() => navigate("/")}
+              >
+                Cancel
+              </button>
+
+              <p className={styles.helper}>
+                Already have an account? <Link to="/sign-in">Sign in</Link>
+              </p>
+            </div>
+          </form>
+        </section>
+      </div>
     </main>
   );
 };

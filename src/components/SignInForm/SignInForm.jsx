@@ -38,17 +38,21 @@ const SignInForm = () => {
   };
 
   return (
-    <main className={styles.container}>
-      <section>
-        <img src={LogoV} alt='Logo' />
-      </section>
-      <section>
-        <form autoComplete="off" onSubmit={handleSubmit}>
-          <h1>Sign In</h1>
-          <p>Enter your username and password to sign in.</p>
-          {message && <p>{message}</p>}
-        <div>
-          <label htmlFor="username">Username:</label>
+<main className={styles.page}>
+  <div className={styles.shell}>
+    <aside className={styles.brand}>
+      <img src={LogoV} alt="Trace" className={styles.logo} />
+    </aside>
+
+    <section className={styles.card}>
+      <h1 className={styles.title}>Sign In</h1>
+      <p className={styles.subtext}>Enter your username and password to sign in.</p>
+
+      {message && <p className={styles.error}>{message}</p>}
+
+      <form className={styles.form} autoComplete="off" onSubmit={handleSubmit}>
+        <div className={styles.field}>
+          <label htmlFor="username">Username</label>
           <input
             type="text"
             id="username"
@@ -60,8 +64,8 @@ const SignInForm = () => {
           />
         </div>
 
-        <div>
-          <label htmlFor="password">Password:</label>
+        <div className={styles.field}>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
@@ -73,18 +77,20 @@ const SignInForm = () => {
           />
         </div>
 
-        <div>
+        <div className={styles.actions}>
           <button type="submit">Sign In</button>
-          <button type="button" onClick={() => navigate("/")}>
+          <button type="button" className={styles.secondaryBtn} onClick={() => navigate("/")}>
             Cancel
           </button>
-          <p>
-            Don’t have an account? <Link to="/sign-up">Sign up</Link>
-        </p>
         </div>
-        </form>
-      </section>
-    </main>
+
+        <p className={styles.helper}>
+          Don’t have an account? <Link to="/sign-up">Sign up</Link>
+        </p>
+      </form>
+    </section>
+  </div>
+</main>
   );
 };
 

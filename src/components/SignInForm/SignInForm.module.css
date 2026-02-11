@@ -1,87 +1,113 @@
-/* src/components/SignInForm/SignInForm.module.css */
+.page {
+  min-height: calc(100vh - 80px);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
 
-.container {
-  height: 100%;
-  display: flex;
-  overflow: hidden;
+.shell {
+  width: min(980px, calc(100% - 32px));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
   align-items: center;
 }
 
-.container p {
-  margin: 0;
-  padding: 0px 0 10px;
-}
-
-.container img {
-  width: 65%;
-  max-width: 500px;
-}
-
-.container section {
-  width: 50%;
-  height: 100%;
+.brand {
   display: flex;
-  padding: 28px 21px;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
+  min-height: 520px;
+  background: transparent;
 }
 
-.container input {
-  margin: 7px 0px 14px 0px;
+.logo {
+  width: 320px;
+  max-width: 85%;
+  height: auto;
+  display: block;
 }
 
-.container input,
-button {
-  width: 100%;
-  padding: 14px;
-  font-size: 14px;
-  border-radius: 5px;
-  border: 1px solid rgb(220, 220, 220);
+.card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 20px;
 }
 
-.container div {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+.title {
+  margin: 0;
 }
 
-.container label {
-  font-weight: 600;
-  margin: 7px 0px 14px 0px;
+.subtext {
+  margin: 6px 0 14px;
+  color: var(--text-muted);
 }
 
-.container button {
-  color: white;
-  font-weight: 600;
-  background: #00a0df;
-  margin: 21px 0px 0px 0px;
+.error {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: var(--text);
 }
 
-.container a {
+.form {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
   border: none;
-  font-size: 14px;
-  background: none;
-  font-weight: 500;
-  margin-top: 14px;
+  box-shadow: none;
+   width: 100%;
+  max-width: none;
+  justify-self: stretch;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.secondaryBtn {
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.secondaryBtn:hover {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(26, 25, 89, 0.22);
+}
+
+.helper {
+  margin: 8px 0 0;
   text-align: center;
-  color: rgb(200, 200, 200);
+  color: var(--text-muted);
 }
 
-input:focus {
-  outline: none;
-  border: 1px solid #00a0df;
-}
+@media (max-width: 860px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
 
-@media only screen and (max-width: 912px) {
-  .container section {
-    width: 100%;
-    justify-content: flex-start;
+  .brand {
+    min-height: 180px;
   }
-  .container section:first-child {
-    display: none;
-  }
-  .container form {
-    min-width: 100%;
+
+  .logo {
+    width: 240px;
   }
 }
