@@ -1,14 +1,13 @@
-// src/components/Loading/Loading.jsx
+import styles from "./Loading.module.css";
+import LoadingIcon from "../../assets/images/loading.svg";
 
-import styles from './Loading.module.css'
-import LoadingIcon from '../../assets/images/loading.svg';
-
-const Loading = () => {
+const Loading = ({ text = "Loading…", variant = "page" }) => {
   return (
-    <main className={styles.container}>
-      <img src={LoadingIcon} alt='Loading...' />
-    </main>
-  )
-}
+    <div className={`${styles.container} ${variant === "inline" ? styles.inline : ""}`}>
+      <img src={LoadingIcon} alt="Loading…" className={styles.loadingImage} />
+      {text && <p className={styles.loadingText}>{text}</p>}
+    </div>
+  );
+};
 
-export default Loading
+export default Loading;

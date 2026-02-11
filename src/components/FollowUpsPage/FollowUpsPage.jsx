@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import * as appService from "../../services/appService";
 import * as followUpService from "../../services/appFollowUp.js";
+import styles from "./FollowUpsPage.module.css";
+import { CheckSquare, Plus, Pencil, Trash2, Save, X } from "lucide-react";
+import Loading from "../Loading/Loading";
 
 const FollowUpsPage = (props) => {
   const [applications, setApplications] = useState([]);
@@ -126,11 +129,10 @@ const handleFollowUpCreated = async () => {
 
  const visibleFollowUps = allFollowUps.filter((followUp) => !followUp.isDone);
 const handleComplete = async (followUp) => {
-  setAllFollowUps((prev) => prev.filter((f) => f._id !== followUp._id));
   await props.handleUpdateFollowUp(followUp.appId, followUp._id, {
     isDone: true,
   });
-   await handleFollowUpCreated();
+  await handleFollowUpCreated();
 };
 
 const formatDate = (dateValue) => {
@@ -142,15 +144,32 @@ const formatDate = (dateValue) => {
   });
 };
   return (
-    <main>
-       <h1>Follow-Ups</h1>
-        <p>
+<main className={styles.container}>
+       <div className={styles.headerRow}>
+         <h1 className={styles.title}>
+          <CheckSquare className={styles.titleIcon} />
+          Follow-Ups
+        </h1>
+        </div>
+        
+        <p className={styles.intro}>
         Track your next actions for each application in one place.
         Add reminders for emails, calls, or messages, update them if plans change,
         and check them off when done.
         </p>
-      <h2>Add Follow-Up</h2>
-      <form onSubmit={handleSubmit}>
+       <section className={`${styles.card} ${styles.formCard}`}>
+<div className={styles.sectionHeader}>
+  <h2 className={styles.sectionTitle}>Add Follow-Up</h2>
+
+  <button type="submit" form="followup-form" className={styles.ctaBtn}>
+    <Plus className={styles.ctaIcon} />
+    Add
+  </button>
+</div>
+
+  <form   id="followup-form" onSubmit={handleSubmit} className={styles.formGrid}>
+    <div className={styles.formLeft}>
+      <div className={styles.field}>
         <label htmlFor="selectedAppId-input">Application</label>
         <select
           required
@@ -166,7 +185,9 @@ const formatDate = (dateValue) => {
             </option>
           ))}
         </select>
+      </div>
 
+      <div className={styles.field}>
         <label htmlFor="dueDate-input">Due Date</label>
         <input
           type="date"
@@ -175,118 +196,154 @@ const formatDate = (dateValue) => {
           value={formData.dueDate}
           onChange={handleChange}
         />
+      </div>
+    </div>
 
+    <div className={styles.formRight}>
+      <div className={styles.field}>
         <label htmlFor="note-input">Note</label>
         <textarea
           name="note"
           id="note-input"
-          placeholder="Add a note..."
+          placeholder="Write the follow-up email, ask for a timeline, send thank you note..."
           value={formData.note}
           onChange={handleChange}
         />
-
-        <button type="submit">Add</button>
-      </form>
+      </div>
+    </div>
+  </form>
+</section>
 
       <hr />
+          <section className={styles.section}>
+  <div className={styles.sectionHeader}>
+    <h2 className={styles.sectionTitle}>Your Follow-Ups</h2>
+  </div>
 
-      <h2>Your Follow-Ups</h2>
-      {isLoading ? (
-      <p>Loading follow-ups...</p>
-      ) : visibleFollowUps.length === 0 ? (
-      <p>No follow-ups yet.</p>
-        ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
-          <thead>
-            <tr style={{ borderBottom: "2px solid #333" }}>
-              <th style={{ padding: "10px", textAlign: "center" }}></th>
-              <th style={{ padding: "10px", textAlign: "left" }}>Application</th>
-              <th style={{ padding: "10px", textAlign: "left" }}>Due Date</th>
-              <th style={{ padding: "10px", textAlign: "left" }}>Note</th>
-              <th style={{ padding: "10px", textAlign: "left" }}>Status</th>
-              <th style={{ padding: "10px", textAlign: "left" }}></th>
+  {isLoading ? (
+
+  <Loading variant="inline" text="Loading follow-ups…" />
+  ) : visibleFollowUps.length === 0 ? (
+    <section className={`${styles.card} ${styles.emptyCard}`}>
+      <p className={styles.muted}>No follow-ups yet.</p>
+    </section>
+  ) : (
+    <section className={`${styles.card} ${styles.tableCard}`}>
+      <div className={styles.tableWrap}>
+        <table className={styles.table}>
+          <thead className={styles.thead}>
+            <tr>
+              <th className={styles.checkCol}></th>
+              <th>Application</th>
+              <th>Due</th>
+              <th>Note</th>
+              <th>Status</th>
+              <th className={styles.actionHead}></th>
             </tr>
           </thead>
-         <tbody>
-  {visibleFollowUps.map((followUp) => (
-    <tr
-      key={followUp._id}
-      style={{ borderBottom: "1px solid #ddd" }}
-    >
-      <td style={{ padding: "10px", textAlign: "center" }}>
-        <input
-          type="checkbox"
-          onChange={() => handleComplete(followUp)}
-          disabled={editingId === followUp._id}
-        />
-      </td>
-      <td style={{ padding: "10px" }}>
-        {followUp.appName}
-      </td>
-      <td style={{ padding: "10px" }}>
-        {editingId === followUp._id ? (
-          <input
-            type="date"
-            name="dueDate"
-            value={editData.dueDate}
-            onChange={handleEditChange}
-          />
-        ) : followUp.dueDate ? (
-          formatDate(followUp.dueDate)
-        ) : (
-          "Not set"
-        )}
-      </td>
-      <td style={{ padding: "10px" }}>
-        {editingId === followUp._id ? (
-          <input
-            type="text"
-            name="note"
-            value={editData.note}
-            onChange={handleEditChange}
-          />
-        ) : (
-          followUp.note || "—"
-        )}
-      </td>
-      <td style={{ padding: "10px" }}>
-        {getStatus(followUp)}
-      </td>
-      <td style={{ padding: "10px" }}>
-        {editingId === followUp._id ? (
-          <>
-            <button
-              type="button"
-              onClick={() => saveEdit(followUp)}
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              onClick={cancelEdit}
-            >
-              Cancel
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              type="button"
-              onClick={() => startEdit(followUp)}
-            >
-              Edit
-            </button>
-            <button type="button" onClick={() => handleDelete(followUp.appId, followUp._id)}>
-            Delete
-            </button>
-          </>
-        )}
-      </td>
-    </tr>
-  ))}
-</tbody>
+
+          <tbody className={styles.tbody}>
+            {visibleFollowUps.map((followUp) => {
+              const status = getStatus(followUp);
+
+              return (
+                <tr key={followUp._id} className={styles.row}>
+                  <td className={styles.checkCell} data-label="Done">
+                    <input
+                      type="checkbox"
+                      onChange={() => handleComplete(followUp)}
+                      disabled={editingId === followUp._id}
+                    />
+                  </td>
+
+                  <td data-label="Application">{followUp.appName}</td>
+
+                  <td data-label="Due">
+                    {editingId === followUp._id ? (
+                      <input
+                        type="date"
+                        name="dueDate"
+                        value={editData.dueDate}
+                        onChange={handleEditChange}
+                      />
+                    ) : followUp.dueDate ? (
+                      formatDate(followUp.dueDate)
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+
+                  <td data-label="Note" className={styles.noteCell}>
+                    {editingId === followUp._id ? (
+                      <input
+                        type="text"
+                        name="note"
+                        value={editData.note}
+                        onChange={handleEditChange}
+                      />
+                    ) : (
+                      followUp.note || "—"
+                    )}
+                  </td>
+
+                  <td data-label="Status">
+                    <span className={styles.statusText}>{status}</span>
+                  </td>
+
+                  <td className={styles.actionCell} data-label="Action">
+                    <div className={styles.actionGroup}>
+                      {editingId === followUp._id ? (
+                        <>
+                          <button
+                            type="button"
+                            className={styles.miniIconBtn}
+                            onClick={() => saveEdit(followUp)}
+                            aria-label="Save"
+                          >
+                            <Save className={styles.miniIcon} />
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.miniIconBtn}
+                            onClick={cancelEdit}
+                            aria-label="Cancel"
+                          >
+                            <X className={styles.miniIcon} />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            className={styles.miniIconBtn}
+                            onClick={() => startEdit(followUp)}
+                            aria-label="Edit"
+                          >
+                            <Pencil className={styles.miniIcon} />
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.miniIconBtn}
+                            onClick={() =>
+                              handleDelete(followUp.appId, followUp._id)
+                            }
+                            aria-label="Delete"
+                          >
+                            <Trash2 className={styles.miniIcon} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
-      )}
+      </div>
+    </section>
+  )}
+</section>
     </main>
   );
 };

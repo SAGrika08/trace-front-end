@@ -3,6 +3,11 @@ import { Link } from "react-router";
 import { UserContext } from "../../contexts/UserContext";
 import * as appService from "../../services/appService";
 import * as followUpService from "../../services/appFollowUp";
+import styles from "./Dashboard.module.css";
+import Loading from "../Loading/Loading";
+
+import { Plus, ArrowRight, ClipboardList, CalendarClock, Briefcase, AlertTriangle,} from "lucide-react";
+
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);
@@ -109,176 +114,228 @@ const Dashboard = () => {
 
  
   if (isLoading) {
-    return (
-      <main>
-        <h1>Welcome, {user?.username}</h1>
-        <p>Loading your dashboard...</p>
-      </main>
-    );
-  }
+  return <Loading text="Loading your dashboard…" />;
+}
 
-  return (
-    <main>
-      <h1>Welcome, {user?.username}</h1>
+return (
+  <main className={styles.container}>
+    <div className={styles.headerRow}>
+      <h1 className={styles.title}>Welcome, {user?.username}</h1>
 
-      <Link to="/applications/new">
-        <button>Add Application</button>
+      <Link to="/applications/new" className={styles.ctaLink}>
+        <button className={styles.ctaBtn} type="button">
+          <Plus className={styles.ctaIcon} />
+          Add Application
+        </button>
       </Link>
+    </div>
 
-      <p>
-        This is your space to manage your job journey. Track applications as you apply,
-        keep follow-ups organized so nothing slips through, and once you start working,
-        log regular check-ins to reflect on how the role is going.
-        </p>
+    <p className={styles.intro}>
+      This is your space to manage your job journey. Track applications, keep follow-ups organized,
+      and once you start working, log check-ins to reflect on how the role is going.
+    </p>
 
-      <section>
-        <h2>Overview</h2>
+    <section className={styles.section}>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>Overview</h2>
+      </div>
 
-        <div>
-          <p>
-            <strong>Total applications:</strong> {totalApplications}
-          </p>
-          <p>
-            <strong>In progress:</strong> {inProgressApplications}
-          </p>
-          <p>
-            <strong>Overdue follow-ups:</strong> {overdueFollowUps.length}
-          </p>
-          <p>
-            <strong>Current role:</strong>{" "}
-            {currentRole ? (
-              <Link to={`/applications/${currentRole._id}`}>
-                {currentRole.company} | {currentRole.roleTitle}
-              </Link>
-            ) : (
-              "None"
-            )}
-          </p>
+      <section className={`${styles.card} ${styles.overviewCard}`}>
+        <div className={styles.overviewGrid}>
+          <div className={styles.statItem}>
+            <ClipboardList className={styles.statIcon} />
+            <div className={styles.statText}>
+              <div className={styles.statLabel}>Total applications</div>
+              <div className={styles.statValue}>{totalApplications}</div>
+            </div>
+          </div>
+
+          <div className={styles.statItem}>
+            <Briefcase className={styles.statIcon} />
+            <div className={styles.statText}>
+              <div className={styles.statLabel}>In progress</div>
+              <div className={styles.statValue}>{inProgressApplications}</div>
+            </div>
+          </div>
+
+          <div className={styles.statItem}>
+            <AlertTriangle className={styles.statIcon} />
+            <div className={styles.statText}>
+              <div className={styles.statLabel}>Overdue follow-ups</div>
+              <div className={styles.statValue}>{overdueFollowUps.length}</div>
+            </div>
+          </div>
+
+          <div className={styles.statItem}>
+            <CalendarClock className={styles.statIcon} />
+            <div className={styles.statText}>
+              <div className={styles.statLabel}>Current role</div>
+              <div className={styles.statValue}>
+                {currentRole ? (
+                  <Link className={styles.inlineLink} to={`/applications/${currentRole._id}`}>
+                    {currentRole.company} | {currentRole.roleTitle}
+                  </Link>
+                ) : (
+                  <span className={styles.muted}>None</span>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+    </section>
 
-      <hr />
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Follow-Ups to Do</h2>
+        </div>
 
-      <section>
-        <h2>Follow-Ups to Do</h2>
+        {nextUpFollowUps.length === 0 ? (
+          <section className={`${styles.card} ${styles.emptyCard}`}>
+            <p className={styles.muted}>No overdue or upcoming follow-ups right now.</p>
+          </section>
+        ) : (
+          <section className={`${styles.card} ${styles.tableCard}`}>
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead className={styles.thead}>
+                  <tr>
+                    <th>Due</th>
+                    <th>Company</th>
+                    <th>Note</th>
+                    <th>Status</th>
+                    <th className={styles.actionHead}></th>
+                  </tr>
+                </thead>
 
-         {nextUpFollowUps.length === 0 ? (
-    <p>No overdue or upcoming follow-ups right now.</p>
-  ) : (
-    <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
-      <thead>
-        <tr style={{ borderBottom: "2px solid #333" }}>
-          <th style={{ padding: "10px", textAlign: "left" }}>Due</th>
-          <th style={{ padding: "10px", textAlign: "left" }}>Company</th>
-          <th style={{ padding: "10px", textAlign: "left" }}>Note</th>
-          <th style={{ padding: "10px", textAlign: "left" }}>Status</th>
-          <th style={{ padding: "10px", textAlign: "left" }}></th>
-        </tr>
-      </thead>
+                <tbody className={styles.tbody}>
+                  {nextUpFollowUps.map((followUp) => {
+                    const tag = getFollowUpTag(followUp);
+                    const isOverdue = tag === "Overdue";
+                    return (
+                      <tr key={followUp._id} className={styles.row}>
+                        <td data-label="Due">{followUp.dueDate ? formatDate(followUp.dueDate) : "Not set"}</td>
+                        <td data-label="Company">{followUp.appName}</td>
+                        <td data-label="Note" className={styles.noteCell}>
+                          {followUp.note || "—"}
+                        </td>
+                        <td data-label="Status">
+                          <span className={`${styles.tag} ${isOverdue ? styles.tagOverdue : styles.tagSoon}`}>
+                            {tag}
+                          </span>
+                        </td>
+                        <td className={styles.actionCell} data-label="Action">
+                          <Link to={`/applications/${followUp.appId}`} className={styles.iconActionLink}>
+                            <button className={styles.miniIconBtn} type="button" aria-label="View application">
+                              <ArrowRight className={styles.miniIcon} />
+                            </button>
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+      </section>
 
-      <tbody>
-        {nextUpFollowUps.map((followUp) => (
-          <tr key={followUp._id} style={{ borderBottom: "1px solid #ddd" }}>
-            <td style={{ padding: "10px" }}>{followUp.dueDate ? formatDate(followUp.dueDate) : "Not set"}</td>
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Recently Added</h2>
+        </div>
 
-            <td style={{ padding: "10px" }}>{followUp.appName}</td>
+        {recentApplications.length === 0 ? (
+          <section className={`${styles.card} ${styles.emptyCard}`}>
+            <p className={styles.muted}>No applications yet. Add one to get started.</p>
+          </section>
+        ) : (
+          <section className={`${styles.card} ${styles.tableCard}`}>
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead className={styles.thead}>
+                  <tr>
+                    <th>Date</th>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th className={styles.actionHead}></th>
+                  </tr>
+                </thead>
 
-            <td style={{ padding: "10px" }}>{followUp.note || "—"}</td>
+                <tbody className={styles.tbody}>
+                  {recentApplications.map((app) => (
+                    <tr key={app._id} className={styles.row}>
+                      <td data-label="Date">{formatDate(app.appliedDate || app.createdAt)}</td>
+                      <td data-label="Company">{app.company}</td>
+                      <td data-label="Role" className={styles.noteCell}>
+                        {app.roleTitle}
+                      </td>
+                      <td data-label="Status">{app.status}</td>
+                      <td className={styles.actionCell} data-label="Action">
+                        <Link to={`/applications/${app._id}`} className={styles.iconActionLink}>
+                          <button className={styles.miniIconBtn} type="button" aria-label="View application">
+                            <ArrowRight className={styles.miniIcon} />
+                          </button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+      </section>
 
-            <td style={{ padding: "10px" }}>{getFollowUpTag(followUp)}</td>
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Current Role Check-In</h2>
+        </div>
 
-            <td style={{ padding: "10px" }}>
-              <Link to={`/applications/${followUp.appId}`}>
-                <button type="button">View</button>
-              </Link>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</section>
-
-
-      <section>
-        <h2>Recently Added</h2>
-
-      {recentApplications.length === 0 ? (
-    <p>No applications yet. Add one to get started.</p>
-  ) : (
-    <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
-      <thead>
-        <tr style={{ borderBottom: "2px solid #333" }}>
-          <th style={{ padding: "10px", textAlign: "left" }}>Date</th>
-          <th style={{ padding: "10px", textAlign: "left" }}>Company</th>
-          <th style={{ padding: "10px", textAlign: "left" }}>Role</th>
-          <th style={{ padding: "10px", textAlign: "left" }}>Status</th>
-          <th style={{ padding: "10px", textAlign: "left" }}></th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {recentApplications.map((app) => (
-          <tr key={app._id} style={{ borderBottom: "1px solid #ddd" }}>
-            <td style={{ padding: "10px" }}>{formatDate(app.appliedDate || app.createdAt)}</td>
-            <td style={{ padding: "10px" }}>{app.company}</td>
-            <td style={{ padding: "10px" }}>{app.roleTitle}</td>
-            <td style={{ padding: "10px" }}>{app.status}</td>
-
-            <td style={{ padding: "10px" }}>
-              <Link to={`/applications/${app._id}`}>
-                <button type="button">View</button>
-              </Link>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</section>
-
-      <section>
-        <h2>Current Role Check-In</h2>
         {workingApps.length === 0 ? (
-    <p>No role is marked as working yet.</p>
-  ) : (
-    <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
-      <thead>
-        <tr style={{ borderBottom: "2px solid #333" }}>
-          <th style={{ padding: "10px", textAlign: "left" }}>Date</th>
-          <th style={{ padding: "10px", textAlign: "left" }}>Company</th>
-          <th style={{ padding: "10px", textAlign: "left" }}>Role</th>
-          <th style={{ padding: "10px", textAlign: "left" }}>Status</th>
-          <th style={{ padding: "10px", textAlign: "left" }}></th>
-        </tr>
-      </thead>
+          <section className={`${styles.card} ${styles.emptyCard}`}>
+            <p className={styles.muted}>No role is marked as working yet.</p>
+          </section>
+        ) : (
+          <section className={`${styles.card} ${styles.tableCard}`}>
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead className={styles.thead}>
+                  <tr>
+                    <th>Date</th>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th className={styles.actionHead}></th>
+                  </tr>
+                </thead>
 
-      <tbody>
-        {workingApps.map((app) => (
-          <tr key={app._id} style={{ borderBottom: "1px solid #ddd" }}>
-            <td style={{ padding: "10px" }}>
-             {formatDate(app.appliedDate || app.createdAt)}
-            </td>
-            <td style={{ padding: "10px" }}>{app.company}</td>
-            <td style={{ padding: "10px" }}>{app.roleTitle}</td>
-            <td style={{ padding: "10px" }}>{app.status}</td>
-
-            {/* <td style={{ padding: "10px" }}>
-              <Link to={`/applications/${app._id}`}>
-                <button type="button">View</button>
-              </Link>
-            </td> */}
-            <td style={{ padding: "10px" }}>
-                <Link to={`/applications/${app._id}`}>
-                <button type="button">Add</button>
-                </Link>{" "}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</section>
+                <tbody className={styles.tbody}>
+                  {workingApps.map((app) => (
+                    <tr key={app._id} className={styles.row}>
+                      <td data-label="Date">{formatDate(app.appliedDate || app.createdAt)}</td>
+                      <td data-label="Company">{app.company}</td>
+                      <td data-label="Role" className={styles.noteCell}>
+                        {app.roleTitle}
+                      </td>
+                      <td data-label="Status">{app.status}</td>
+                      <td className={styles.actionCell} data-label="Action">
+                        <Link to={`/applications/${app._id}`} className={styles.iconActionLink}>
+                          <button className={styles.miniIconBtn} type="button" aria-label="Add check-in">
+                            <Plus className={styles.miniIcon} />
+                          </button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+      </section>
     </main>
   );
 };

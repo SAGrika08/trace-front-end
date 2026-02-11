@@ -191,7 +191,7 @@ const moodEmoji = (mood) => {
 
 //   if (!app) return <main>Loading application...</main>;
 
-if (!app) return <Loading />
+if (!app) return <Loading text="Loading application…" />;
 
 const isWorking = app.status === "working";
 
