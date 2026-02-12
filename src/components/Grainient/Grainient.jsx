@@ -100,7 +100,7 @@ void main(){
 `;
 
 const Grainient = ({
-  timeSpeed = 2.9,
+  timeSpeed = 1.9,
   colorBalance = 0.0,
   warpStrength = 1.0,
   warpFrequency = 5.0,
@@ -119,9 +119,9 @@ const Grainient = ({
   centerX = 0.0,
   centerY = 0.0,
   zoom = 0.9,
-  color1 = '#FF9FFC',
-  color2 = '#5227FF',
-  color3 = '#B19EEF',
+  color1 = '5BABDA',
+  color2 = '#ffffff',
+  color3 = '#bbfaff',
   className = ''
 }) => {
   const containerRef = useRef(null);

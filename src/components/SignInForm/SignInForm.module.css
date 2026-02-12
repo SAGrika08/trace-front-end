@@ -61,6 +61,23 @@
   padding: 20px;
 }
 
+
+.form {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+}
+
+.form {
+  all: unset;
+  display: grid;
+  gap: 12px;
+  width: 100%;
+}
+
 .title {
   margin: 0;
 }
