@@ -8,6 +8,7 @@ import SignInForm from './components/SignInForm/SignInForm.jsx';
 import Landing from './components/Landing/Landing';
 import Dashboard from './components/Dashboard/Dashboard';
 import AppList from './components/AppList/AppList.jsx';
+import Grainient from './components/Grainient/Grainient';
 import * as appService from './services/appService.js';
 import * as followUpService from './services/appFollowUp.js';
 import * as checkInService from './services/checkInService.js';
@@ -100,7 +101,15 @@ const handleDeleteCheckIn = async (appId, checkInId) => {
   
   return (
     <>
-        {user && <NavBar />}
+      <div className="page-background">
+        <Grainient
+          color1="#FF9FFC"
+          color2="#5227FF"
+          color3="#B19EEF"
+          timeSpeed={0.15}
+        />
+      </div>
+      {user && <NavBar />}
       <Routes>
          <Route path='/' element={user ? <Dashboard /> : <Landing /> } />
           {user ? (
