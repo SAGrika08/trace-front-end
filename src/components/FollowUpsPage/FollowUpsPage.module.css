@@ -48,7 +48,6 @@
   border-radius: var(--radius);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
-  background: rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
@@ -59,18 +58,46 @@
   max-width: none;
 }
 
-
 .formGrid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 16px 20px;
   width: 100%;
+  max-width: none;
   margin: 0;
   padding: 0;
   background: transparent;
   border: none;
   box-shadow: none;
-  max-width: none;
+}
+
+#followup-form {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#followup-form * {
+  background-clip: padding-box;
+}
+
+.formCard form {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+}
+
+.formCard .field,
+.formCard .formLeft,
+.formCard .formRight {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .formLeft {
@@ -110,7 +137,6 @@
   height: 18px;
 }
 
-
 .tableCard {
   border-radius: 6px;
   overflow: hidden;
@@ -124,8 +150,8 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.3);
   table-layout: fixed;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .table input[type="checkbox"] {
@@ -135,7 +161,6 @@
   appearance: auto;
   -webkit-appearance: auto;
 }
-
 
 .thead th {
   padding: 12px 14px;
@@ -201,18 +226,18 @@
 
 .actionGroup {
   display: inline-flex;
-  gap: 10px;
   align-items: center;
+  gap: 10px;
 }
 
 .miniIconBtn {
   width: 34px;
   height: 34px;
+  padding: 0;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.45);
   box-shadow: none;
-  padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -240,6 +265,36 @@
 
 .muted {
   color: var(--text-muted);
+}
+
+.formGrid select,
+.formGrid input,
+.formGrid textarea {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: none;
+  outline: none;
+}
+
+.formGrid select:focus,
+.formGrid input:focus,
+.formGrid textarea:focus {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22);
+  border-color: rgba(245, 158, 11, 0.6);
+}
+
+.formLeft,
+.formRight {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.formCard .field {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 @media (max-width: 720px) {

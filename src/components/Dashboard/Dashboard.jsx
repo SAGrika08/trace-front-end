@@ -101,9 +101,9 @@ const Dashboard = () => {
   });
 };
 
-  const getAppDateLabel = (app) => {
-    return app.appliedDate ? formatDate(app.appliedDate) : formatDate(app.createdAt);
-  };
+//   const getAppDateLabel = (app) => {
+//     return app.appliedDate ? formatDate(app.appliedDate) : formatDate(app.createdAt);
+//   };
 
   const getFollowUpTag = (followUp) => {
     if (!followUp.dueDate) return "No date";

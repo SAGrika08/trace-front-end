@@ -214,7 +214,6 @@ const formatDate = (dateValue) => {
   </form>
 </section>
 
-      <hr />
           <section className={styles.section}>
   <div className={styles.sectionHeader}>
     <h2 className={styles.sectionTitle}>Your Follow-Ups</h2>
