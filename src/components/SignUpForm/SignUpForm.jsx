@@ -55,11 +55,6 @@ const SignUpForm = () => {
             <img src={LogoV} alt="Trace" className={styles.logo} />
         
             <h1 className={styles.headline}>Your job search, organized.</h1>
-        
-            {/* <p className={styles.lead}>
-              Save every application, stay on top of follow-ups, and log check-ins
-              once you’re working so you always know what to do next.
-            </p> */}
           </div>
         </aside>
 
