@@ -103,9 +103,9 @@ const handleDeleteCheckIn = async (appId, checkInId) => {
     <>
       <div className="page-background">
         <Grainient
-          color1="5BABDA"
-          color2 = '#FFFFFf'
-          color3 = '#bbfaff'
+          color1="#5BABDA"
+          color2 = '#bbfaff'
+          color3 = '#ffffff'
           timeSpeed={0.40}
         />
       </div>

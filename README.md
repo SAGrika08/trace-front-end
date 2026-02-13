@@ -50,7 +50,7 @@ Planning included:
 # Planning Materials
 Figma: https://www.figma.com/design/zyg34mwgMU5HrzjV2grQci/SE--PROJECTS?node-id=161-2&t=qn288Sy0TlxtZVNn-1 
 
-Trello: 
+Trello: https://trello.com/invite/b/698e13d8104243de84b1588f/ATTIff2c7ec506fde66afa73c77ef5444a51782D2287/web-jsx-project
 
 # Brief
 The brief for this project was to build a full-stack web application using the MERN stack with secure user authentication and full CRUD functionality.
