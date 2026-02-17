@@ -13,17 +13,17 @@ The app allows users to log job applications with key details like company, role
 TRACE was built to address a real problem, experienced during our own job search: losing track of where applied, forgetting to follow up, and having no structured way to reflect once started working. TRACE focuses on clarity, continuity, and intention, helping users always know what they’ve done, what’s next, and how things are going.
 
 # Deployment Link
-Live App:
+Live App: https://tracejob.netlify.app/
 
 # Demo Login (for reviewers):
 Username: demo
 Password: 1234
 
 # Backend GitHub Repo
-Link: https://github.com/K2222810/trace-back-end
+Link: https://github.com/SAGrika08/trace-back-end
 
 # Frontend GitHub Repo
-Link: https://github.com/K2222810/trace-front-end
+Link: https://github.com/SAGrika08/trace-front-end 
 
 # Timeframe & Working Team
 Timeframe: 1 week
